@@ -1,5 +1,6 @@
 package com.example.rsancryption.controller;
 
+import com.example.rsancryption.service.EncryptAndDecryptService;
 import com.example.rsancryption.service.EncryptRsaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,8 @@ import java.security.NoSuchAlgorithmException;
 public class EncryptRsaController {
     @Autowired
     private EncryptRsaService encryptRsaService;
+    @Autowired
+    private EncryptAndDecryptService encryptAndDecryptService;
 
     @GetMapping("/createKeys")
     public void createPrivatePublicKey() throws NoSuchAlgorithmException {
