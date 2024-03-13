@@ -1,5 +1,8 @@
 package com.example.rsancryption.service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -7,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,5 +40,20 @@ public class EncryptAndDecryptService {
         }
         return ResponseEntity.ok(tokenResponse.getBody());
     }
-
+    public String decodeJwt() throws UnsupportedEncodingException {
+        String accessToken = "Bearer " + Objects.requireNonNull(tokenResponse().getBody()).get("access_token");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", accessToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String payload=accessToken.split("\\.")[1];
+        Gson gson=new Gson();
+        String json=new String(org.apache.commons.codec.binary.Base64.decodeBase64(payload),"UTF-8");
+        JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+        String pbk = jsonObject.get("pbk").getAsString()
+        .replace("-----BEGIN PUBLIC KEY-----","")
+                .replaceAll(System.lineSeparator(),"")
+                        .replace("-----END PUBLIC KEY-----","");
+        System.out.println(pbk);
+        return new String(Base64.decodeBase64(payload),"UTF-8");
+    }
 }

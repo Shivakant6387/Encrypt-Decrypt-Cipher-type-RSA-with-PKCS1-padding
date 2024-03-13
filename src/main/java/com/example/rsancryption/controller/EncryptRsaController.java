@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
@@ -16,6 +17,10 @@ public class EncryptRsaController {
     private EncryptRsaService encryptRsaService;
     @Autowired
     private EncryptAndDecryptService encryptAndDecryptService;
+    @GetMapping("/jwt/decode")
+    public String decodeJwt() throws UnsupportedEncodingException {
+        return encryptAndDecryptService.decodeJwt();
+    }
 
     @GetMapping("/createKeys")
     public void createPrivatePublicKey() throws NoSuchAlgorithmException {
